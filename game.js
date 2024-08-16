@@ -1,9 +1,15 @@
 // typing-word-game.js
-window.initGame = (React, assetsUrl) => {
+window.initGame = (React) => {
   const { useState, useEffect } = React;
 
   const WordGame = () => {
-    const words = ["apple", "banana", "cherry", "date", "fig", "grape", "kiwi", "lemon", "mango", "mouse", "pen", "shoe", "ball", "cup", "bird", "house", "road", "cake", "table", "chair", "star", "stay", "tree", "cat"];
+    const words = [
+      "apple", "banana", "cherry", "date", "fig",
+      "grape", "kiwi", "lemon", "mango", "mouse",
+      "pen", "shoe", "ball", "cup", "bird",
+      "house", "road", "cake", "table", "chair",
+      "star", "stay", "tree", "cat"
+    ];
     const [score, setScore] = useState(0);
     const [highScore, setHighScore] = useState(0);
     const [currentWord, setCurrentWord] = useState("");
