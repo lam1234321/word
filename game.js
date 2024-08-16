@@ -38,16 +38,36 @@ window.initGame = (React, assetsUrl) => {
       { className: "word-game" },
       React.createElement('h2', null, "English Word Game"),
       React.createElement('p', null, `Score: ${score}`),
-      React.createElement('p', null, `Guess the word: ${currentWord.replace(/./g, '*')}`),
+      React.createElement('div', { className: "word-container" },
+        React.createElement('p', null, `Type the word:`),
+        React.createElement('div', { className: "word-box" }, currentWord)
+      ),
       React.createElement('input', {
         type: 'text',
         value: inputValue,
         onChange: (e) => setInputValue(e.target.value),
-        onKeyPress: handleKeyPress
+        onKeyPress: handleKeyPress,
+        placeholder: "Your guess here"
       }),
       React.createElement('button', {
         onClick: checkGuess
-      }, "Submit"))
+      }, "Submit"),
+      React.createElement('style', null, `
+        .word-container {
+          margin: 20px 0;
+        }
+
+        .word-box {
+          display: inline-block;
+          width: 200px;  /* Adjust width as needed */
+          height: 50px;   /* Adjust height as needed */
+          border: 2px solid #000;
+          text-align: center;
+          line-height: 50px;  /* Centers text vertically */
+          font-size: 24px;
+          background-color: #f8f8f8;
+        }
+      `)
     );
   };
 
