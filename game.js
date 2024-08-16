@@ -2,7 +2,7 @@
 window.initGame = (React, assetsUrl) => {
   const { useState, useEffect } = React;
 
-  const WhackAMole = ({ assetsUrl }) => {
+  const WhackAMole = () => {
     const [score, setScore] = useState(0);
     const [activeMole, setActiveMole] = useState(null);
 
@@ -100,11 +100,12 @@ window.initGame = (React, assetsUrl) => {
       React.createElement(
         'div',
         null,
-        selectedGame === 'whack-a-mole' ? React.createElement(WhackAMole, { assetsUrl }) : React.createElement(WordGame)
+        selectedGame === 'whack-a-mole' ? React.createElement(WhackAMole) : React.createElement(WordGame)
       )
     );
   };
 
+  // Return the GameSelector component as a functional component
   return () => React.createElement(GameSelector);
 };
 
