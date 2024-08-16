@@ -1,47 +1,6 @@
-// games.js
+// typing-word-game.js
 window.initGame = (React, assetsUrl) => {
   const { useState, useEffect } = React;
-
-  const WhackAMole = () => {
-    const [score, setScore] = useState(0);
-    const [activeMole, setActiveMole] = useState(null);
-
-    useEffect(() => {
-      const interval = setInterval(() => {
-        setActiveMole(Math.floor(Math.random() * 9));
-      }, 1000);
-      return () => clearInterval(interval);
-    }, []);
-
-    const whackMole = (index) => {
-      if (index === activeMole) {
-        setScore(score + 1);
-        setActiveMole(null);
-      }
-    };
-
-    return React.createElement(
-      'div',
-      { className: "whack-a-mole" },
-      React.createElement('h2', null, "Whack-a-Mole"),
-      React.createElement('p', null, `Score: ${score}`),
-      React.createElement(
-        'div',
-        { className: "game-board" },
-        Array(9).fill().map((_, index) =>
-          React.createElement(
-            'div',
-            {
-              key: index,
-              className: `mole ${index === activeMole ? 'active' : ''}`,
-              onClick: () => whackMole(index)
-            },
-            index === activeMole && React.createElement('img', { src: `${assetsUrl}/chi.png`, alt: "Mole" })
-          )
-        )
-      )
-    );
-  };
 
   const WordGame = () => {
     const words = ["apple", "banana", "cherry", "date", "fig", "grape", "kiwi", "lemon", "mango"];
@@ -68,6 +27,12 @@ window.initGame = (React, assetsUrl) => {
       }
     };
 
+    const handleKeyPress = (event) => {
+      if (event.key === 'Enter') {
+        checkGuess();
+      }
+    };
+
     return React.createElement(
       'div',
       { className: "word-game" },
@@ -77,7 +42,8 @@ window.initGame = (React, assetsUrl) => {
       React.createElement('input', {
         type: 'text',
         value: inputValue,
-        onChange: (e) => setInputValue(e.target.value)
+        onChange: (e) => setInputValue(e.target.value),
+        onKeyPress: handleKeyPress
       }),
       React.createElement('button', {
         onClick: checkGuess
@@ -85,28 +51,7 @@ window.initGame = (React, assetsUrl) => {
     );
   };
 
-  const GameSelector = () => {
-    const [selectedGame, setSelectedGame] = useState('whack-a-mole');
-
-    return React.createElement(
-      'div',
-      null,
-      React.createElement(
-        'div',
-        { className: "game-selector" },
-        React.createElement('button', { onClick: () => setSelectedGame('whack-a-mole') }, "Whack-a-Mole"),
-        React.createElement('button', { onClick: () => setSelectedGame('word-game') }, "English Word Game")
-      ),
-      React.createElement(
-        'div',
-        null,
-        selectedGame === 'whack-a-mole' ? React.createElement(WhackAMole) : React.createElement(WordGame)
-      )
-    );
-  };
-
-  // Return the GameSelector component as a functional component
-  return () => React.createElement(GameSelector);
+  return () => React.createElement(WordGame);
 };
 
-console.log('Combined game script loaded');
+console.log('English Word Game script loaded');
