@@ -16,6 +16,7 @@ window.initGame = (React) => {
     const [inputValue, setInputValue] = useState("");
     const [timeLeft, setTimeLeft] = useState(30);
     const [gameOver, setGameOver] = useState(false);
+    const [gameStarted, setGameStarted] = useState(false); // New state variable
 
     const selectNewWord = () => {
       const randomWord = words[Math.floor(Math.random() * words.length)];
@@ -24,22 +25,24 @@ window.initGame = (React) => {
     };
 
     useEffect(() => {
-      selectNewWord();
-      const timer = setInterval(() => {
-        setTimeLeft(prev => {
-          if (prev <= 1) {
-            clearInterval(timer);
-            setGameOver(true);
-            if (score > highScore) {
-              setHighScore(score);
+      if (gameStarted) {
+        selectNewWord();
+        const timer = setInterval(() => {
+          setTimeLeft(prev => {
+            if (prev <= 1) {
+              clearInterval(timer);
+              setGameOver(true);
+              if (score > highScore) {
+                setHighScore(score);
+              }
+              return 0;
             }
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-      return () => clearInterval(timer);
-    }, []);
+            return prev - 1;
+          });
+        }, 1000);
+        return () => clearInterval(timer);
+      }
+    }, [gameStarted]);
 
     const checkGuess = () => {
       if (inputValue.toLowerCase() === currentWord.toLowerCase() && !gameOver) {
@@ -54,6 +57,15 @@ window.initGame = (React) => {
       setScore(0);
       setTimeLeft(30);
       setGameOver(false);
+      selectNewWord();
+      setGameStarted(false); // Reset the game started state
+    };
+
+    const startGame = () => {
+      setGameStarted(true); // Set game started to true
+      setGameOver(false); // Reset game over state
+      setScore(0);
+      setTimeLeft(30);
       selectNewWord();
     };
 
@@ -80,12 +92,12 @@ window.initGame = (React) => {
         onChange: (e) => setInputValue(e.target.value),
         onKeyPress: handleKeyPress,
         placeholder: "Your guess here",
-        disabled: gameOver
+        disabled: gameOver || !gameStarted // Disable input if game is over or not started
       }),
       React.createElement('button', {
-        onClick: gameOver ? resetGame : checkGuess,
-        disabled: gameOver
-      }, gameOver ? "Play Again" : "Submit"),
+        onClick: gameOver ? resetGame : (gameStarted ? checkGuess : startGame),
+        disabled: gameOver && !gameStarted
+      }, gameOver ? "Play Again" : (gameStarted ? "Submit" : "Start")),
       React.createElement('style', null, `
         body {
           display: flex;
