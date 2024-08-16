@@ -5,6 +5,7 @@ window.initGame = (React, assetsUrl) => {
   const WordGame = () => {
     const words = ["apple", "banana", "cherry", "date", "fig", "grape", "kiwi", "lemon", "mango"];
     const [score, setScore] = useState(0);
+    const [highScore, setHighScore] = useState(0);
     const [currentWord, setCurrentWord] = useState("");
     const [inputValue, setInputValue] = useState("");
     const [timeLeft, setTimeLeft] = useState(30);
@@ -23,7 +24,10 @@ window.initGame = (React, assetsUrl) => {
           if (prev <= 1) {
             clearInterval(timer);
             setGameOver(true);
-            return 0; // Stop timer at 0
+            if (score > highScore) {
+              setHighScore(score);
+            }
+            return 0;
           }
           return prev - 1;
         });
@@ -58,6 +62,7 @@ window.initGame = (React, assetsUrl) => {
       { className: "word-game" },
       React.createElement('h2', null, "English Word Game"),
       React.createElement('p', null, `Score: ${score}`),
+      React.createElement('p', null, `High Score: ${highScore}`),
       React.createElement('p', null, `Time left: ${timeLeft} seconds`),
       React.createElement('div', { className: "word-container" },
         React.createElement('p', null, `Type the word:`),
@@ -69,12 +74,12 @@ window.initGame = (React, assetsUrl) => {
         onChange: (e) => setInputValue(e.target.value),
         onKeyPress: handleKeyPress,
         placeholder: "Your guess here",
-        disabled: gameOver // Disable input if game is over
+        disabled: gameOver
       }),
       React.createElement('button', {
         onClick: gameOver ? resetGame : checkGuess,
-        disabled: gameOver // Disable button if game is over
-      }, gameOver ? "Reset Game" : "Submit"),
+        disabled: gameOver
+      }, gameOver ? "Play Again" : "Submit"),
       React.createElement('style', null, `
         body {
           display: flex;
@@ -92,11 +97,11 @@ window.initGame = (React, assetsUrl) => {
         }
         .word-box {
           display: inline-block;
-          width: 200px;  
-          height: 50px;   
+          width: 200px;
+          height: 50px;
           border: 2px solid #000;
           text-align: center;
-          line-height: 50px;  
+          line-height: 50px;
           font-size: 24px;
           background-color: #f8f8f8;
         }
