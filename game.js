@@ -53,19 +53,39 @@ window.initGame = (React, assetsUrl) => {
         onClick: checkGuess
       }, "Submit"),
       React.createElement('style', null, `
+        body {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100vh;
+          margin: 0;
+          background: linear-gradient(to right, #ffe7e7, #d0e1f9);
+        }
+        .word-game {
+          text-align: center;
+        }
         .word-container {
           margin: 20px 0;
         }
-
         .word-box {
           display: inline-block;
-          width: 200px;  /* Adjust width as needed */
-          height: 50px;   /* Adjust height as needed */
+          width: 200px;  
+          height: 50px;   
           border: 2px solid #000;
           text-align: center;
-          line-height: 50px;  /* Centers text vertically */
+          line-height: 50px;  
           font-size: 24px;
           background-color: #f8f8f8;
+        }
+        input {
+          font-size: 18px;
+          padding: 10px;
+          margin: 10px 0;
+        }
+        button {
+          padding: 10px 20px;
+          font-size: 18px;
+          cursor: pointer;
         }
       `)
     );
