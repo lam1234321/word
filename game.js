@@ -71,7 +71,7 @@ window.initGame = (React, assetsUrl) => {
     );
   };
 
-  return () => React.createElement(WordGame);
+  return WordGame;
 };
 
 console.log('English Word Game script loaded');
