@@ -7,6 +7,8 @@ window.initGame = (React, assetsUrl) => {
     const [score, setScore] = useState(0);
     const [currentWord, setCurrentWord] = useState("");
     const [inputValue, setInputValue] = useState("");
+    const [timeLeft, setTimeLeft] = useState(30);
+    const [gameOver, setGameOver] = useState(false);
 
     const selectNewWord = () => {
       const randomWord = words[Math.floor(Math.random() * words.length)];
@@ -16,10 +18,21 @@ window.initGame = (React, assetsUrl) => {
 
     useEffect(() => {
       selectNewWord();
+      const timer = setInterval(() => {
+        setTimeLeft(prev => {
+          if (prev <= 1) {
+            clearInterval(timer);
+            setGameOver(true);
+            return 0; // Stop timer at 0
+          }
+          return prev - 1;
+        });
+      }, 1000);
+      return () => clearInterval(timer);
     }, []);
 
     const checkGuess = () => {
-      if (inputValue.toLowerCase() === currentWord.toLowerCase()) {
+      if (inputValue.toLowerCase() === currentWord.toLowerCase() && !gameOver) {
         setScore(score + 1);
         selectNewWord();
       } else {
@@ -27,8 +40,15 @@ window.initGame = (React, assetsUrl) => {
       }
     };
 
+    const resetGame = () => {
+      setScore(0);
+      setTimeLeft(30);
+      setGameOver(false);
+      selectNewWord();
+    };
+
     const handleKeyPress = (event) => {
-      if (event.key === 'Enter') {
+      if (event.key === 'Enter' && !gameOver) {
         checkGuess();
       }
     };
@@ -38,6 +58,7 @@ window.initGame = (React, assetsUrl) => {
       { className: "word-game" },
       React.createElement('h2', null, "English Word Game"),
       React.createElement('p', null, `Score: ${score}`),
+      React.createElement('p', null, `Time left: ${timeLeft} seconds`),
       React.createElement('div', { className: "word-container" },
         React.createElement('p', null, `Type the word:`),
         React.createElement('div', { className: "word-box" }, currentWord)
@@ -47,11 +68,13 @@ window.initGame = (React, assetsUrl) => {
         value: inputValue,
         onChange: (e) => setInputValue(e.target.value),
         onKeyPress: handleKeyPress,
-        placeholder: "Your guess here"
+        placeholder: "Your guess here",
+        disabled: gameOver // Disable input if game is over
       }),
       React.createElement('button', {
-        onClick: checkGuess
-      }, "Submit"),
+        onClick: gameOver ? resetGame : checkGuess,
+        disabled: gameOver // Disable button if game is over
+      }, gameOver ? "Reset Game" : "Submit"),
       React.createElement('style', null, `
         body {
           display: flex;
